@@ -1,6 +1,7 @@
 // screens/ReviewScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Rating } from 'react-native';
+import { View, Text, TextInput, Button } from 'react-native';
+import StarRating from 'react-native-star-rating';
 
 function ReviewScreen({ route, navigation }) {
   const { doctor } = route.params;
@@ -34,9 +35,14 @@ function ReviewScreen({ route, navigation }) {
         style={{ marginBottom: 10, padding: 8, borderWidth: 1, borderColor: '#ccc' }}
       />
 
-      <Rating
-        showRating
-        onFinishRating={(value) => setRating(value)}
+      <StarRating
+        disabled={false}
+        maxStars={5}
+        rating={rating}
+        selectedStar={(rating) => setRating(rating)}
+        starSize={30}
+        fullStarColor={'gold'}
+        emptyStarColor={'gray'}
         style={{ marginBottom: 20 }}
       />
 
