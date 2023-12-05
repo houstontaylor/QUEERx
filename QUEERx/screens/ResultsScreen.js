@@ -17,8 +17,8 @@ function ResultsScreen({ route, navigation }) {
     // Replace the following line with your actual data fetching logic
     const filteredDoctors = dummyDoctorData.filter(
       (doctor) =>
-        doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        doctor.distance.toLowerCase().includes(location.toLowerCase())
+        doctor.name == undefined ? doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) : '' &&
+        doctor.distance == undefined ? doctor.distance.toLowerCase().includes(location.toLowerCase()): ''
     );
 
     setDoctors(filteredDoctors);

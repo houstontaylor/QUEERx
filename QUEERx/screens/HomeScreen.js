@@ -1,6 +1,7 @@
 // screens/HomeScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Image } from 'react-native';
+import { Searchbar, Button } from 'react-native-paper';
 
 function HomeScreen({ navigation }) {
   const [searchQuery, setSearchQuery] = useState('');
