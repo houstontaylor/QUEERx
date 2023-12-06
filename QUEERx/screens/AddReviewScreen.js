@@ -17,7 +17,7 @@ const AddReviewScreen = ({ route }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Card style={styles.card}>
         <Card.Cover source={doctor.image} style={styles.doctorImage} />
         <Card.Content>
@@ -55,7 +55,7 @@ const AddReviewScreen = ({ route }) => {
           Submit Review
         </Button>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

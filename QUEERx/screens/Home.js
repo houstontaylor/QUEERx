@@ -1,20 +1,6 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, ScrollView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Provider as PaperProvider, 
-  Searchbar, 
-  List, 
-  Title,
-  Button,
-  Card,
-  Text,
-  Modal,
-  Portal,
-  Checkbox,
-  IconButton } from 'react-native-paper';
-import StarRating from 'react-native-star-rating';
-import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import { View, StyleSheet, Image } from 'react-native';
+import { Searchbar, Button } from 'react-native-paper';
 
 const Home = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -61,7 +47,6 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 16,
     backgroundColor: '#306B70',
-
   },
   image: {
     width: '90%',
@@ -85,7 +70,6 @@ const styles = StyleSheet.create({
   },
   card: {
     marginBottom: 16,
-
     height: '14%'
   },
   textContainer: {

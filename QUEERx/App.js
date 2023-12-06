@@ -1,10 +1,10 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider as PaperProvider } from 'react-native-paper';
-import Home from './screens/Home';
-import ResultsScreen from './screens/ResultsScreen';
-import DoctorDetailScreen from './screens/DoctorDetailScreen';
-import AddReviewScreen from './screens/AddReviewScreen';
+import Home from './screens/Home.js';
+import ResultsScreen from './screens/ResultsScreen.js';
+import DoctorDetailScreen from './screens/DoctorDetailScreen.js';
+import AddReviewScreen from './screens/AddReviewScreen.js';
 
 const Stack = createNativeStackNavigator();
 
