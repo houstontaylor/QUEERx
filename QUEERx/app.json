@@ -28,18 +28,49 @@
     },
     "extra": {
       "fontFamily": {
-        "Inter": ["./assets/fonts/Inter-Regular.ttf"],
-        "Inter-Bold": ["./assets/fonts/Inter-Bold.ttf"],
-        "Inter-Italic": ["./assets/fonts/Inter-Italic.ttf"],
-        "Inter-ExtraBold": ["./assets/fonts/Inter-ExtraBold.ttf"],
-        "Inter-Black": ["./assets/fonts/Inter-Black.ttf"],
-        "Inter-ExtraLight": ["./assets/fonts/Inter-ExtraLight.ttf"],
-        "Inter-Light": ["./assets/fonts/Inter-Light.ttf"],
-        "Inter-Medium": ["./assets/fonts/Inter-Medium.ttf"],
-        "Inter-SemiBold": ["./assets/fonts/Inter-SemiBold.ttf"],
-        "Inter-Thin": ["./assets/fonts/Inter-Thin.ttf"],
-        "Inter-VariableFont": ["./assets/fonts/Inter-VariableFont.ttf"]
+        "Inter": [
+          "./assets/fonts/Inter-Regular.ttf"
+        ],
+        "Inter-Bold": [
+          "./assets/fonts/Inter-Bold.ttf"
+        ],
+        "Inter-Italic": [
+          "./assets/fonts/Inter-Italic.ttf"
+        ],
+        "Inter-ExtraBold": [
+          "./assets/fonts/Inter-ExtraBold.ttf"
+        ],
+        "Inter-Black": [
+          "./assets/fonts/Inter-Black.ttf"
+        ],
+        "Inter-ExtraLight": [
+          "./assets/fonts/Inter-ExtraLight.ttf"
+        ],
+        "Inter-Light": [
+          "./assets/fonts/Inter-Light.ttf"
+        ],
+        "Inter-Medium": [
+          "./assets/fonts/Inter-Medium.ttf"
+        ],
+        "Inter-SemiBold": [
+          "./assets/fonts/Inter-SemiBold.ttf"
+        ],
+        "Inter-Thin": [
+          "./assets/fonts/Inter-Thin.ttf"
+        ],
+        "Inter-VariableFont": [
+          "./assets/fonts/Inter-VariableFont.ttf"
+        ]
+      },
+      "eas": {
+        "projectId": "cc39282c-27f3-44a0-b509-3159bc2340f6"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/cc39282c-27f3-44a0-b509-3159bc2340f6"
     }
   }
 }

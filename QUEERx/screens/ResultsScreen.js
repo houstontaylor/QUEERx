@@ -110,14 +110,15 @@ const ResultsScreen = ({ route, navigation }) => {
     // } else {
     //   setDoctors(doctorsData);
     // }
+  };
+
+  useEffect(() => {
     const filteredDoctors = doctorsData.filter((doctor) => 
         doctor.name ? doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) : null ||
         doctor.profession ? doctor.profession.toLowerCase().includes(searchQuery.toLowerCase()) : null
     );
-  };
 
-  useEffect(() => {
-    applyFilters();
+    setDoctors(filteredDoctors);
   }, [searchQuery, filters]);
 
 
