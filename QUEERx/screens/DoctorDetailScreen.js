@@ -14,6 +14,7 @@ import {
 import StarRating from 'react-native-star-rating';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+//details of doctor
 const DoctorDetailScreen = ({ route, navigation }) => {
   const { doctor } = route.params;
   const [searchQuery, setSearchQuery] = useState('');

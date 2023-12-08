@@ -4,6 +4,7 @@ import { TextInput, Button, Avatar, Title, Text, Portal, Modal } from 'react-nat
 import StarRating from 'react-native-star-rating';
 import * as ImagePicker from 'expo-image-picker';
 
+//add review
 const AddReviewScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [identities, setIdentities] = useState('');

@@ -11,6 +11,8 @@ const Home = ({ navigation }) => {
     navigation.navigate("Results", { initialSearchQuery: searchQuery, location: location });
   };
 
+
+  //hom page
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>

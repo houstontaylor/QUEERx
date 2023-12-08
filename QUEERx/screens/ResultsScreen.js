@@ -112,6 +112,7 @@ const ResultsScreen = ({ route, navigation }) => {
     // }
   };
 
+  //results 
   useEffect(() => {
     const filteredDoctors = doctorsData.filter((doctor) => 
         doctor.name ? doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) : null ||
