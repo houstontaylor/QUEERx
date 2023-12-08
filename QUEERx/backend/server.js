@@ -15,15 +15,15 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Dummy data to simulate doctors in a database
-const allDoctors = doctorsData;
 
 // API endpoint to fetch doctors based on search query
 app.get('/api/doctors', (req, res) => {
   const { searchQuery } = req.query;
 
   // Filter doctors based on the searchQuery
-  const filteredDoctors = allDoctors.filter((doctor) =>
-    doctor.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredDoctors = doctorsData.filter((doctor) =>
+    doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    doctor.profession.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   res.json(filteredDoctors);

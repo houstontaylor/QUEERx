@@ -25,6 +25,21 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "fontFamily": {
+        "Inter": ["./assets/fonts/Inter-Regular.ttf"],
+        "Inter-Bold": ["./assets/fonts/Inter-Bold.ttf"],
+        "Inter-Italic": ["./assets/fonts/Inter-Italic.ttf"],
+        "Inter-ExtraBold": ["./assets/fonts/Inter-ExtraBold.ttf"],
+        "Inter-Black": ["./assets/fonts/Inter-Black.ttf"],
+        "Inter-ExtraLight": ["./assets/fonts/Inter-ExtraLight.ttf"],
+        "Inter-Light": ["./assets/fonts/Inter-Light.ttf"],
+        "Inter-Medium": ["./assets/fonts/Inter-Medium.ttf"],
+        "Inter-SemiBold": ["./assets/fonts/Inter-SemiBold.ttf"],
+        "Inter-Thin": ["./assets/fonts/Inter-Thin.ttf"],
+        "Inter-VariableFont": ["./assets/fonts/Inter-VariableFont.ttf"]
+      }
     }
   }
 }

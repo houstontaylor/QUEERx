@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, FlatList, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, FlatList, TouchableOpacity, Linking, Image } from 'react-native';
 import {
   Avatar,
   Card,
@@ -9,21 +9,17 @@ import {
   Chip,
   Searchbar,
   Button,
+  IconButton,
 } from 'react-native-paper';
 import StarRating from 'react-native-star-rating';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const DoctorDetailScreen = ({ route, navigation }) => {
   const { doctor } = route.params;
   const [searchQuery, setSearchQuery] = useState('');
   const [isDescriptionExpanded, setDescriptionExpanded] = useState(false);
 
-  // Dummy data for reviews (replace it with your actual data)
-  const reviews = [
-    { id: 1, name: 'John Doe', image: require('../assets/person1.jpg'), rating: 4, comment: 'Great doctor!' },
-    { id: 2, name: 'Jane Smith', image: require('../assets/person2.jpg'), rating: 5, comment: 'Excellent service.' },
-    { id: 3, name: 'Alex Johnson', image: require('../assets/person3.jpg') },
-    // Add more reviews as needed
-  ];
+  const reviews = doctor.reviews;
 
   let filteredReviews = reviews;
   if (searchQuery !== '') {
@@ -36,6 +32,11 @@ const DoctorDetailScreen = ({ route, navigation }) => {
     navigation.navigate('Review', { doctor });
   };
 
+  const handleReviewPress = (reviewer) => {
+    // Navigate to ReviewDetailScreen with the selected reviewer's information
+    navigation.navigate("Review Detail", { reviewer });
+  };
+
   const toggleDescription = () => {
     setDescriptionExpanded(!isDescriptionExpanded);
   };
@@ -44,21 +45,32 @@ const DoctorDetailScreen = ({ route, navigation }) => {
     toggleDescription();
   };
 
+  const handleCallDoctor = () => {
+    // Use Linking to initiate a phone call
+    const phoneNumber = doctor.phone;
+    Linking.openURL(`tel:${phoneNumber}`);
+  };
+
+  const handleOpenDirections = () => {
+    // Create a deep link for directions using the doctor's address
+    const address = encodeURIComponent(`${doctor.address}, ${doctor.location}`);
+    Linking.openURL(`http://maps.apple.com/?daddr=${address}`);
+  };
+
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
-        <TouchableOpacity onPress={toggleDescription}>
-          <Card.Cover source={doctor.image} style={styles.doctorImage} />
-        </TouchableOpacity>
         <Card.Content style={styles.contentContainer}>
           <View style={styles.infoContainer}>
             <View style={styles.avatarContainer}>
               <Avatar.Image source={doctor.image} size={80} />
             </View>
             <View style={styles.detailsContainer}>
-              <Title>{doctor.name}</Title>
-              <Subheading>{doctor.profession}</Subheading>
-              <View style={styles.starsContainer}>
+              <View style={styles.textContainer}>
+                <Title>{doctor.title}</Title>
+                <Subheading>{doctor.profession}</Subheading>
+              </View>
+              <View style={[styles.starsContainer, { padding: 2 }]}>
                 <StarRating
                   disabled
                   maxStars={5}
@@ -68,21 +80,49 @@ const DoctorDetailScreen = ({ route, navigation }) => {
                   containerStyle={styles.stars}
                 />
               </View>
-              <View style={styles.chipContainer}>
-                <Chip icon="map-marker">{doctor.location}</Chip>
-                <Chip icon="clock-time-four-outline">{`${doctor.distance} miles`}</Chip>
-              </View>
             </View>
-            <TouchableOpacity
-              style={styles.expandButton}
-              onPress={handleExpandButtonPress}
-            >
-              <Text style={{ color: '#306B70' }}>
-                {isDescriptionExpanded ? 'Collapse' : 'Expand'}
-              </Text>
-            </TouchableOpacity>
           </View>
-          {isDescriptionExpanded && <Text style={styles.description}>{doctor.description}</Text>}
+          <View style={styles.chipContainer}>
+            <Chip icon={() => <MaterialCommunityIcons name="map-marker" size={15} color="#FAF9F6"/>} style={[styles.chip, { marginRight: 8 }]}>
+              <Text style={{ color:"#FFF" }}>{doctor.location}</Text>
+            </Chip>
+            <Chip icon={() => <MaterialCommunityIcons name="clock-time-four-outline" size={15} color="#FAF9F6"/>} style={styles.chip}>
+              <Text style={{ color:"#FFF" }}>{`${doctor.distance} miles`}</Text>
+            </Chip>
+          </View>
+          <IconButton
+            icon={isDescriptionExpanded ? 'chevron-up' : 'chevron-down'}
+            color="#EB5F56"
+            size={24}
+            onPress={handleExpandButtonPress}
+            style={{ color: '#306B70', marginLeft: 'auto' }}
+          />
+          {isDescriptionExpanded && (
+            <View>
+              <Text style={styles.description}>{doctor.description}</Text>
+              <View style={styles.contactContainer}>
+                <IconButton
+                  icon={() => <MaterialCommunityIcons name="phone" size={20} color="#306B70" />}
+                  color="#306B70"
+                  onPress={handleCallDoctor}
+                />
+                <TouchableOpacity onPress={handleCallDoctor}>
+                  <Text style={{ marginLeft: 8 }}>{doctor.phone}</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.contactContainer}>
+                <IconButton
+                  icon={() => <MaterialCommunityIcons name="map-marker" size={20} color="#306B70" />}
+                  color="#306B70"
+                  onPress={handleOpenDirections}
+                />
+                <TouchableOpacity onPress={handleOpenDirections}>
+                  <Text style={{ marginLeft: 8 }}>{doctor.address}</Text>
+                </TouchableOpacity>
+              </View>
+              
+            </View>
+          )}
         </Card.Content>
       </Card>
 
@@ -101,24 +141,31 @@ const DoctorDetailScreen = ({ route, navigation }) => {
           data={filteredReviews}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <Card style={styles.reviewCard}>
-              <Card.Content>
-                <View style={styles.reviewInfoContainer}>
-                  <Avatar.Image source={item.image} size={40} style={styles.avatar} />
-                  <View style={styles.reviewDetails}>
-                    <Text style={styles.reviewName}>{item.name}</Text>
-                    <StarRating
-                      disabled
-                      maxStars={5}
-                      rating={item.rating}
-                      starSize={15}
-                      fullStarColor="#F5C664"
-                      containerStyle={styles.stars}
-                    />
+            <TouchableOpacity onPress={() => handleReviewPress(item)}>
+              <Card style={styles.reviewCard}>
+                <Card.Content>
+                  <View style={styles.reviewInfoContainer}>
+                    <Avatar.Image source={item.image} size={40} style={styles.avatar} />
+                    <View style={styles.reviewDetails}>
+                      <Text style={styles.reviewName}>{item.name}</Text>
+                      <View style={styles.starsContainer}>
+                        <StarRating
+                          disabled
+                          maxStars={5}
+                          rating={item.rating}
+                          starSize={15}
+                          fullStarColor="#F5C664"
+                          containerStyle={styles.smallStars}
+                        />
+                      </View>
+                      <Text style={styles.reviewComment}>
+                        {item.comment.length > 40 ? `${item.comment.substring(0, 20)}...` : item.comment}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              </Card.Content>
-            </Card>
+                </Card.Content>
+              </Card>
+            </TouchableOpacity>
           )}
         />
       </View>
@@ -140,8 +187,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     resizeMode: 'cover',
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
   },
   contentContainer: {
     paddingTop: 16,
@@ -149,6 +194,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   detailsContainer: {
     flex: 1,
@@ -157,24 +203,27 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
-    padding: 8,
     borderTopRightRadius: 8,
     borderBottomLeftRadius: 8,
   },
   stars: {
     alignSelf: 'flex-end',
+    width: '65%',
   },
   chipContainer: {
     flexDirection: 'row',
     marginTop: 8,
+    marginLeft: 8,
+    flexWrap: 'wrap',
+    width: '100%'
   },
   chip: {
     backgroundColor: '#EB5F56',
   },
   expandButton: {
     position: 'absolute',
-    bottom: 0,
-    right: 0,
+    bottom: 8,
+    right: 8,
     backgroundColor: '#FFF',
     padding: 8,
     borderTopLeftRadius: 8,
@@ -188,9 +237,12 @@ const styles = StyleSheet.create({
   addButton: {
     backgroundColor: '#306B70',
     marginTop: 8,
+    position: 'absolute',
+    right: 8,
+    top: -10
   },
   searchBar: {
-    backgroundColor: 'rgba(148,206,210,0.30)',
+    backgroundColor: '#94ced24d',
     marginTop: 8,
   },
   reviewCard: {
@@ -208,6 +260,24 @@ const styles = StyleSheet.create({
   },
   reviewName: {
     fontSize: 16,
+  },
+  textContainer: {
+    marginLeft: 8,
+  },
+  callButton: {
+    backgroundColor: '#306B70',
+    marginTop: 8,
+  },
+  contactContainer: {
+    flexDirection: 'row',
+    marginTop: 2,
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    width: '100%',
+  },
+  smallStars: {
+    alignSelf: 'flex-end',
+    width: '50%',
   },
 });
 

@@ -12,12 +12,13 @@ import {
   Portal,
   Checkbox,
   IconButton,
+  Chip,
 } from 'react-native-paper';
 import StarRating from 'react-native-star-rating';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { doctorsData } from '../constants';
 import { fetchDoctors } from '../api';
-import FilterModal from '../components/FilterModal';
+import { TouchableWithoutFeedback } from 'react-native';
 
 const ResultsScreen = ({ route, navigation }) => {
   const { initialSearchQuery, location } = route.params;
@@ -50,6 +51,9 @@ const ResultsScreen = ({ route, navigation }) => {
         star3: false,
       },
     },
+    insurance: {
+        title: 'Insurance',
+    },
   });
   const optionLabels = {
     mi5: '< 5 miles',
@@ -68,19 +72,56 @@ const ResultsScreen = ({ route, navigation }) => {
   const showModal = () => setIsModalVisible(true);
   const hideModal = () => setIsModalVisible(false);
 
-  // Fetch doctors based on searchQuery
-  useEffect(() => {
-    // const fetchData = async () => {
-    //   try {
-    //     const result = await fetchDoctors(searchQuery);
-    //     setDoctors(result);
-    //   } catch (error) {
-    //     console.error('Error fetching doctors:', error);
-    //   }
-    // };
+  // Fetch doctors based on searchQuery or filter change
+  const applyFilters = () => {
+    // if (searchQuery !== undefined) {
+    //   let workingDoctors = doctorsData;
 
-    // fetchData();
+    //   if (filters) {
+    //     // Apply filters here
+    //     Object.keys(filters).forEach((filter) => {
+    //       if (filters[filter].options) {
+    //         Object.keys(filters[filter].options).forEach((option) => {
+    //           if (filters[filter].options[option]) {
+    //             // Apply filter based on the selected option
+    //             workingDoctors = workingDoctors.filter((doctor) => {
+    //               // Your filter logic here
+    //               return true; // Placeholder, replace with actual filter conditions
+    //             });
+    //           }
+    //         });
+    //       } else if (filters[filter]) {
+    //         // Apply filter based on the filter itself
+    //         workingDoctors = workingDoctors.filter((doctor) => {
+    //           // Your filter logic here
+    //           return true; // Placeholder, replace with actual filter conditions
+    //         });
+    //       }
+    //     });
+    //   }
+
+    //   // Apply search query filter
+    //   const filteredDoctors = workingDoctors.filter((doctor) =>
+    //     doctor.name ? doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) : null ||
+    //     doctor.profession ? doctor.profession.toLowerCase().includes(searchQuery.toLowerCase()) : null
+    //   );
+
+    //   setDoctors(filteredDoctors);
+    // } else {
+    //   setDoctors(doctorsData);
+    // }
+    const filteredDoctors = doctorsData.filter((doctor) => 
+        doctor.name ? doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) : null ||
+        doctor.profession ? doctor.profession.toLowerCase().includes(searchQuery.toLowerCase()) : null
+    );
+  };
+
+  useEffect(() => {
+    applyFilters();
   }, [searchQuery, filters]);
+
+
+
 
   const toggleFilter = (filter, option) => {
     if (option) {
@@ -103,7 +144,7 @@ const ResultsScreen = ({ route, navigation }) => {
   };
 
   const handleDoctorPress = (doctor) => {
-    navigation.navigate('Detail', { doctor });
+    navigation.navigate("Doctor Details", { doctor });
   };
 
   const handleSearch = () => {
@@ -114,18 +155,20 @@ const ResultsScreen = ({ route, navigation }) => {
   const numResults = doctors.length;
 
   return (
+    <TouchableWithoutFeedback>
     <View style={styles.container}>
       <View style={styles.searchContainer}>
-        <Searchbar
-          placeholder={initialSearchQuery}
-          onChangeText={(text) => setSearchQuery(text)}
-          value={searchQuery}
-          onSubmitEditing={handleSearch}
-          style={styles.searchBar}
+      <Searchbar
+            placeholder={`${initialSearchQuery}`}
+            onChangeText={(text) => setSearchQuery(text)}
+            value={searchQuery}
+            onSubmitEditing={handleSearch}
+            style={styles.searchBar}
         />
+
         <IconButton
-          icon={({ color, size }) => (
-            <MaterialCommunityIcons name="filter" color={color} size={size} />
+          icon={({ size }) => (
+            <MaterialCommunityIcons name="filter" color={'#FAF9F6'} size={size} />
           )}
           onPress={showModal}
           color="#306B70" // Customize the color as needed
@@ -165,7 +208,9 @@ const ResultsScreen = ({ route, navigation }) => {
               ))}
             </View>
           </ScrollView>
-          <Button onPress={hideModal}>Apply</Button>
+          <Button onPress={hideModal} style={styles.button}>
+            <Text style={{ color:"#FFF" }}>Apply</Text>
+          </Button>
         </Modal>
       </Portal>
       <View style={styles.cardsContainer}>
@@ -193,16 +238,24 @@ const ResultsScreen = ({ route, navigation }) => {
                       disabled
                       maxStars={5}
                       rating={item.rating}
-                      starSize={20}
+                      starSize={28}
                       fullStarColor="#F5C664"
                       containerStyle={styles.stars}
                     />
+                    <Text style={styles.reviewCount}>{ item.reviews ? `${item.reviews.length} reviews` : '0 reviews'}</Text>
                   </View>
                 </View>
                 <View style={styles.textContainer}>
-                  <Card.Title title={item.title} subtitle={`${item.location}`} />
+                  <Card.Title title={item.title} subtitle={`${item.profession}`} />
                   <Card.Content>
-                    <Text>{item.description}</Text>
+                    <View style={styles.chipContainer}>
+                        <Chip icon={() => <MaterialCommunityIcons name="map-marker" size={15} color="#FAF9F6"/>} style={[styles.chip, { marginRight: 8 }]}>
+                            <Text style={{ color: '#FFF' }}>{item.location}</Text>
+                        </Chip>
+                        <Chip icon={() => <MaterialCommunityIcons name="clock-time-four-outline" size={15} color="#FAF9F6"/>} style={styles.chip}>
+                            <Text style={{ color: '#FFF' }}>{`${item.distance} miles`}</Text>
+                        </Chip>
+                    </View>
                   </Card.Content>
                 </View>
               </Card.Content>
@@ -211,6 +264,7 @@ const ResultsScreen = ({ route, navigation }) => {
         />
       </View>
     </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -233,7 +287,7 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   searchBar: {
-    backgroundColor: 'rgba(148,206,210,0.30)',
+    backgroundColor: '#94ced24d',
     width: '80%',
   },
   icon: {
@@ -260,7 +314,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   card: {
-    width: '100%',
     marginBottom: 16,
   },
   doctorimage: {
@@ -280,6 +333,14 @@ const styles = StyleSheet.create({
   },
   stars: {
     alignSelf: 'flex-end',
+  },
+  chipContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: '100%'
+  },
+  chip: {
+    backgroundColor: '#EB5F56',
   },
 });
 

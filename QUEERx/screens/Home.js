@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Searchbar, Button } from 'react-native-paper';
 
 const Home = ({ navigation }) => {
@@ -8,32 +8,34 @@ const Home = ({ navigation }) => {
 
   const handleSearch = () => {
     // Navigate to the Search Results screen with searchQuery and location as parameters
-    navigation.navigate("Results", { searchQuery, location });
+    navigation.navigate("Results", { initialSearchQuery: searchQuery, location: location });
   };
 
   return (
-    <View style={styles.container}>
-      <Image source={require('../assets/logo.png')} style={styles.image} />
-      <Searchbar
-        placeholder="Search doctor by name or specialty"
-        onChangeText={(text) => setSearchQuery(text)}
-        value={searchQuery}
-        onSubmitEditing={handleSearch}
-        style={styles.searchBar}
-      />
-      <Searchbar
-        placeholder="Current location"
-        onChangeText={(text) => setLocation(text)}
-        value={location}
-        onSubmitEditing={handleSearch}
-        style={styles.searchBar}
-        icon="map-marker"
-      />
-      <Button mode="contained" onPress={handleSearch} style={styles.button}>
-        Search
-      </Button>
-      <Image source={require('../assets/doctors.png')} style={styles.image} />
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Image source={require('../assets/logo.png')} style={styles.image} />
+        <Searchbar
+          placeholder="Search doctor by name or specialty"
+          onChangeText={(text) => setSearchQuery(text)}
+          value={searchQuery}
+          onSubmitEditing={handleSearch}
+          style={styles.searchBar}
+        />
+        <Searchbar
+          placeholder="Current location"
+          onChangeText={(text) => setLocation(text)}
+          value={location}
+          onSubmitEditing={handleSearch}
+          style={styles.searchBar}
+          icon="map-marker"
+        />
+        <Button mode="contained" onPress={handleSearch} style={styles.button}>
+          Search
+        </Button>
+        <Image source={require('../assets/doctors.png')} style={styles.image} />
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -65,11 +67,12 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     marginBottom: 16,
-    backgroundColor: 'rgba(148,206,210,0.30)',
+    backgroundColor: '#94ced24d',
     width: '100%',
   },
   card: {
     marginBottom: 16,
+
     height: '14%'
   },
   textContainer: {
