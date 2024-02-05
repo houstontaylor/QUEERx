@@ -51,9 +51,10 @@ const ResultsScreen = ({ route, navigation }) => {
         star3: false,
       },
     },
-    insurance: {
-        title: 'Insurance',
-    },
+    // insurance: {
+    //     title: 'Insurance',
+    //     opt
+    // },
   });
   const optionLabels = {
     mi5: '< 5 miles',
@@ -73,45 +74,35 @@ const ResultsScreen = ({ route, navigation }) => {
   const hideModal = () => setIsModalVisible(false);
 
   // Fetch doctors based on searchQuery or filter change
-  const applyFilters = () => {
-    // if (searchQuery !== undefined) {
-    //   let workingDoctors = doctorsData;
-
-    //   if (filters) {
-    //     // Apply filters here
-    //     Object.keys(filters).forEach((filter) => {
-    //       if (filters[filter].options) {
-    //         Object.keys(filters[filter].options).forEach((option) => {
-    //           if (filters[filter].options[option]) {
-    //             // Apply filter based on the selected option
-    //             workingDoctors = workingDoctors.filter((doctor) => {
-    //               // Your filter logic here
-    //               return true; // Placeholder, replace with actual filter conditions
-    //             });
-    //           }
-    //         });
-    //       } else if (filters[filter]) {
-    //         // Apply filter based on the filter itself
-    //         workingDoctors = workingDoctors.filter((doctor) => {
-    //           // Your filter logic here
-    //           return true; // Placeholder, replace with actual filter conditions
-    //         });
-    //       }
-    //     });
-    //   }
-
-    //   // Apply search query filter
-    //   const filteredDoctors = workingDoctors.filter((doctor) =>
-    //     doctor.name ? doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) : null ||
-    //     doctor.profession ? doctor.profession.toLowerCase().includes(searchQuery.toLowerCase()) : null
-    //   );
-
-    //   setDoctors(filteredDoctors);
-    // } else {
-    //   setDoctors(doctorsData);
-    // }
+  const applyFIlters = () => {
+    let workingDoctors = doctors;
+  
+    Object.keys(filters).forEach((filter) => {
+      if (filters[filter].options) {
+        // Array to store selected options for the current filter
+        const selectedOptions = Object.keys(filters[filter].options).filter(
+          (option) => filters[filter].options[option]
+        );
+  
+        // Apply filter based on the selected options
+        if (selectedOptions.length > 0) {
+          workingDoctors = workingDoctors.filter((doctor) =>
+            selectedOptions.some((selectedOption) => doctor.filters.includes(selectedOption))
+          );
+        }
+      } else if (filters[filter]) {
+        // Apply filter based on the filter itself
+        workingDoctors = workingDoctors.filter((doctor) =>
+          doctor.filters.includes(filters[filter])
+        );
+      }
+    });
+  
+    setDoctors(workingDoctors);
+    setIsModalVisible(false);
   };
 
+  //results 
   useEffect(() => {
     const filteredDoctors = doctorsData.filter((doctor) => 
         doctor.name ? doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) : null ||
@@ -119,7 +110,7 @@ const ResultsScreen = ({ route, navigation }) => {
     );
 
     setDoctors(filteredDoctors);
-  }, [searchQuery, filters]);
+  }, [searchQuery]);
 
 
 
@@ -209,7 +200,7 @@ const ResultsScreen = ({ route, navigation }) => {
               ))}
             </View>
           </ScrollView>
-          <Button onPress={hideModal} style={styles.button}>
+          <Button onPress={applyFIlters} style={styles.button}>
             <Text style={{ color:"#FFF" }}>Apply</Text>
           </Button>
         </Modal>
@@ -223,6 +214,7 @@ const ResultsScreen = ({ route, navigation }) => {
             : `No results found for "${searchQuery}" near ${location}`}
         </Title>
         <FlatList
+        style={{ height: '90%' }}
           data={doctors}
           keyExtractor={(result) => result.id.toString()}
           renderItem={({ item }) => (

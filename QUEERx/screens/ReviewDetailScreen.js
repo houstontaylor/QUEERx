@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import StarRating from 'react-native-star-rating';
 
+//review details
 const ReviewDetailScreen = ({ route }) => {
   const { reviewer } = route.params;
 

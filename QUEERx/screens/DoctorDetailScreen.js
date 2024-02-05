@@ -139,6 +139,7 @@ const DoctorDetailScreen = ({ route, navigation }) => {
           style={styles.searchBar}
         />
         <FlatList
+          style={{ height: '50%' }}
           data={filteredReviews}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
